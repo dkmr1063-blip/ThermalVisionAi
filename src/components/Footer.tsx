@@ -43,8 +43,8 @@ export const Footer = () => {
           <div>
             <h3 className="text-foreground font-semibold mb-4">Contact</h3>
             <div className="flex flex-col gap-2">
-              <a href="mailto:info@thermalvision.ai" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                info@thermalvision.ai
+              <a href="mailto:dkmr006@gmail.com" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                dkmr006@gmail.com
               </a>
               <span className="text-muted-foreground text-sm">
                 Built with React + TypeScript

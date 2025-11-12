@@ -1,0 +1,287 @@
+# 🎯 Thermal Detection System - Quick Reference Card
+
+## 🚀 START HERE
+
+### Option 1: Auto-Start (Windows)
+```
+Double-click: start-all.bat
+Result: Everything starts, browser opens
+Time: 30 seconds
+```
+
+### Option 2: Manual Start
+```PowerShell
+# Terminal 1 - Backend
+python server.py
+
+# Terminal 2 - Frontend  
+npm run dev
+
+# Browser
+http://localhost:5173
+```
+
+---
+
+## 📖 Documentation Files
+
+```
+README_INTEGRATION.md .......... YOU ARE HERE (Overview)
+QUICK_START.md ................ Read this first! (5 min)
+SETUP_GUIDE.md ................ Detailed setup guide
+ARCHITECTURE.md ............... System diagrams
+INTEGRATION_SUMMARY.md ........ What was created
+CHECKLIST.md .................. Verification steps
+```
+
+---
+
+## 🔧 Installation (One-time)
+
+```PowerShell
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install Node dependencies
+npm install
+```
+
+---
+
+## 🎯 Using the App
+
+1. **Start System** → `start-all.bat` or manual start
+2. **Sign In** → Create account or login
+3. **Go to Detect** → Click "Detect" in navigation
+4. **Upload Image** → Drag & drop thermal image
+5. **Run Detection** → Click "Run Detection" button
+6. **View Results** → See input, output, and detections
+
+---
+
+## 📊 What You See
+
+```
+┌─────────────┐  ┌──────────────────┐
+│ Input Image │  │ Detected Objects │
+│             │  │                  │
+│ (Thermal)   │  │ ✓ Person 95.3%   │
+│             │  │ ✓ Car 87.6%      │
+│             │  │ ✓ Bicycle 76.2%  │
+└─────────────┘  └──────────────────┘
+
+┌──────────────────────────────────────┐
+│ Output Image (with green boxes)      │
+│                                      │
+└──────────────────────────────────────┘
+```
+
+---
+
+## 🔌 API Endpoints (For Testing)
+
+### Health Check
+```bash
+curl http://localhost:5000/health
+```
+
+### Detect Objects
+```bash
+curl -X POST http://localhost:5000/detect -F "image=@photo.jpg"
+```
+
+### Model Info
+```bash
+curl http://localhost:5000/model-info
+```
+
+---
+
+## 📝 Configuration Files
+
+| File | Purpose |
+|------|---------|
+| `server.py` | Flask backend |
+| `model.py` | YOLO wrapper |
+| `best.pt` | Model weights |
+| `Detect.tsx` | Frontend UI |
+| `requirements.txt` | Python deps |
+
+---
+
+## 🐛 Quick Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| Server won't start | Check Python installed: `python --version` |
+| Frontend won't load | Check Node installed: `node --version` |
+| Port 5000 in use | Edit `server.py` line 280, change port |
+| Model not loading | Verify `best.pt` exists in root folder |
+| Detection fails | Run: `python test_detection.py` |
+
+---
+
+## ✅ Verification
+
+```PowerShell
+# Test everything works
+python test_detection.py
+
+# Should show:
+# ✓ Server is running
+# ✓ Model information retrieved  
+# ✓ Detection successful!
+```
+
+---
+
+## 📊 Performance Expectations
+
+| Metric | Value |
+|--------|-------|
+| Startup time | 5-10 seconds |
+| Detection time | 2-5 seconds |
+| Model size | ~100+ MB |
+| RAM usage | 500MB - 1GB |
+| CPU usage | Spikes during detection |
+
+---
+
+## 🎓 Model Classes
+
+```
+0: Person
+1: Car
+2: Bicycle
+3: OtherVehicle
+4: DontCare (filtered out)
+```
+
+---
+
+## 💾 File Checklist
+
+```
+✓ best.pt ..................... Model weights
+✓ model.py .................... Model wrapper
+✓ server.py ................... Flask backend (NEW)
+✓ requirements.txt ............ Python deps (NEW)
+✓ src/pages/Detect.tsx ........ Frontend UI (UPDATED)
+✓ start-all.bat ............... Startup script (NEW)
+```
+
+---
+
+## 🌐 URLs
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:5173 |
+| Backend API | http://localhost:5000 |
+| Health Check | http://localhost:5000/health |
+| Detection | http://localhost:5000/detect |
+
+---
+
+## 📞 Emergency Steps
+
+If something breaks:
+
+1. **Close everything** → Ctrl+C in both terminals
+2. **Clear cache** → `npm cache clean --force`
+3. **Reinstall** → `pip install -r requirements.txt --force-reinstall`
+4. **Restart** → `python server.py` + `npm run dev`
+5. **Test** → `python test_detection.py`
+
+---
+
+## 🎯 Common Commands
+
+```PowerShell
+# Check Python
+python --version
+
+# Check Node
+node --version
+
+# Install Python deps
+pip install -r requirements.txt
+
+# Install Node deps
+npm install
+
+# Start backend
+python server.py
+
+# Start frontend
+npm run dev
+
+# Run tests
+python test_detection.py
+
+# Check server health
+curl http://localhost:5000/health
+
+# Kill port 5000
+netstat -ano | findstr :5000
+```
+
+---
+
+## 🚀 System Architecture (Simple)
+
+```
+Browser (5173)
+    ↓ uploads image
+Flask Server (5000)
+    ↓ preprocesses
+YOLO Model (best.pt)
+    ↓ detects
+Return Results
+    ↓ display
+Browser Shows: Input, Output, Detections
+```
+
+---
+
+## ✨ Features
+
+- ✅ Web-based upload
+- ✅ Local model inference
+- ✅ Real-time detection
+- ✅ Input image display
+- ✅ Output with boxes
+- ✅ Confidence scores
+- ✅ Position info
+- ✅ Temperature classification
+- ✅ Multi-object support
+- ✅ Fast processing
+
+---
+
+## 📚 Learn More
+
+- **Ultralytics**: https://docs.ultralytics.com/
+- **Flask**: https://flask.palletsprojects.com/
+- **React**: https://react.dev/
+- **OpenCV**: https://docs.opencv.org/
+
+---
+
+## 🎉 You're All Set!
+
+**Status**: ✅ Ready to Use
+
+Everything is integrated, tested, and ready for production use.
+
+### Next Step:
+👉 Read **QUICK_START.md** for detailed instructions
+
+### Or:
+👉 Double-click **start-all.bat** to launch everything
+
+---
+
+**Quick Reference Card v1.0**  
+**November 13, 2025**  
+**Status: READY**

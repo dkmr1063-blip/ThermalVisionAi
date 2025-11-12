@@ -91,16 +91,11 @@ const Detect = () => {
       const formData = new FormData();
       formData.append('image', selectedFile);
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/detect-thermal`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: formData,
-        }
-      );
+      // Use local Python server for detection
+      const response = await fetch('http://localhost:5000/detect', {
+        method: 'POST',
+        body: formData,
+      });
 
       if (!response.ok) {
         const error = await response.json();
@@ -108,12 +103,23 @@ const Detect = () => {
       }
 
       const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Detection failed');
+      }
+
       setDetections(result.detections || []);
-      setProcessedImageUrl(result.image_url);
-      toast.success(`Detection complete! Found ${result.detections?.length || 0} objects.`);
+      setProcessedImageUrl(result.output_image);
+      
+      // Also update the selected image display to show input
+      if (result.input_image) {
+        setSelectedImage(result.input_image);
+      }
+      
+      toast.success(`Detection complete! Found ${result.detection_count || 0} objects.`);
     } catch (error: any) {
       console.error('Detection error:', error);
-      toast.error(error.message || "Failed to process image");
+      toast.error(error.message || "Failed to process image. Make sure the Python server is running on port 5000.");
     } finally {
       setIsProcessing(false);
     }
@@ -217,59 +223,55 @@ const Detect = () => {
                 <div className="grid md:grid-cols-2 gap-8 mb-6">
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-4">
-                      Processed Image
+                      Input Image
                     </h3>
                     <div className="relative">
                       <img
                         src={selectedImage || ''}
-                        alt="Processed thermal"
-                        className="w-full rounded-lg"
+                        alt="Input thermal"
+                        className="w-full rounded-lg border border-border"
                       />
-                      <svg
-                        className="absolute inset-0 w-full h-full"
-                        viewBox="0 0 100 100"
-                        preserveAspectRatio="none"
-                      >
-                        {detections.map((detection, idx) => (
-                          <rect
-                            key={idx}
-                            x={detection.bbox.x}
-                            y={detection.bbox.y}
-                            width={detection.bbox.width}
-                            height={detection.bbox.height}
-                            fill="none"
-                            stroke="hsl(var(--primary))"
-                            strokeWidth="0.5"
-                            className="animate-pulse"
-                          />
-                        ))}
-                      </svg>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-lg font-semibold text-foreground mb-4">
                       Detected Objects ({detections.length})
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
                       {detections.map((detection, idx) => (
                         <Card key={idx} className="p-4 bg-background border-border">
                           <div className="flex justify-between items-start mb-2">
                             <span className="font-semibold text-foreground">
                               {detection.label}
                             </span>
-                            <span className="text-sm text-muted-foreground">
+                            <span className="text-sm text-muted-foreground bg-primary/10 px-2 py-1 rounded">
                               {(detection.confidence * 100).toFixed(1)}%
                             </span>
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            Temperature: <span className="text-primary font-medium">{detection.temperature}</span>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <div>Position: ({detection.bbox.x.toFixed(1)}%, {detection.bbox.y.toFixed(1)}%)</div>
+                            <div>Size: {detection.bbox.width.toFixed(1)}% × {detection.bbox.height.toFixed(1)}%</div>
+                            <div>Temperature: <span className="text-primary font-medium">{detection.temperature}</span></div>
                           </div>
                         </Card>
                       ))}
                     </div>
                   </div>
                 </div>
+
+                {processedImageUrl && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground mb-4">
+                      Output with Detections
+                    </h3>
+                    <img
+                      src={processedImageUrl}
+                      alt="Detected objects"
+                      className="w-full rounded-lg border border-border"
+                    />
+                  </div>
+                )}
               </Card>
             )}
 
