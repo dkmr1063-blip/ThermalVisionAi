@@ -60,6 +60,7 @@ def startup():
     """Initialize model on first request"""
     global model_wrapper
     if model_wrapper is None:
+        print("Initializing model on first request...")
         init_model()
 
 def process_image(image_data):
@@ -281,15 +282,15 @@ def model_info():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    # Initialize model
-    init_model()
+    # Note: Model is initialized on first request, not at startup
+    # This prevents timeout issues in production environments like Render
     
-    # Run server
     print("Starting Flask server for thermal detection...")
     print("Available endpoints:")
     print("  GET  /health - Health check")
     print("  GET  /model-info - Model information")
     print("  POST /detect - Detect objects in image")
+    print("Model will be loaded on first request...")
     
     # Get environment variables
     is_production = os.environ.get('FLASK_ENV') == 'production'
