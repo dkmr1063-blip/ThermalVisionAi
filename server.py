@@ -280,9 +280,13 @@ if __name__ == '__main__':
     print("  GET  /model-info - Model information")
     print("  POST /detect - Detect objects in image")
     
+    # Get environment variables
+    is_production = os.environ.get('FLASK_ENV') == 'production'
+    port = int(os.environ.get('PORT', 5000))
+    
     app.run(
-        host='127.0.0.1',
-        port=5000,
-        debug=True,
-        use_reloader=True
+        host='0.0.0.0',
+        port=port,
+        debug=not is_production,
+        use_reloader=False
     )

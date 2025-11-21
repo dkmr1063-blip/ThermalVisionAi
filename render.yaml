@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: thermal-vision-frontend
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_URL
+        value: ${RENDER_EXTERNAL_URL}
+    routes:
+      - path: /api
+        destination: http://localhost:5000
+
+  - type: web
+    name: thermal-vision-backend
+    runtime: python
+    pythonVersion: 3.11
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: "false"
+    healthCheckPath: /health
+    port: 5000
