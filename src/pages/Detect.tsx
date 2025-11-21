@@ -91,8 +91,13 @@ const Detect = () => {
       const formData = new FormData();
       formData.append('image', selectedFile);
 
-      // Use local Python server for detection
-      const response = await fetch('http://localhost:5000/detect', {
+      // Use environment variable for API URL
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const detectEndpoint = `${apiUrl}/detect`;
+      
+      console.log('Calling detection endpoint:', detectEndpoint);
+
+      const response = await fetch(detectEndpoint, {
         method: 'POST',
         body: formData,
       });
@@ -119,7 +124,7 @@ const Detect = () => {
       toast.success(`Detection complete! Found ${result.detection_count || 0} objects.`);
     } catch (error: any) {
       console.error('Detection error:', error);
-      toast.error(error.message || "Failed to process image. Make sure the Python server is running on port 5000.");
+      toast.error(error.message || "Failed to process image. Please check the backend connection.");
     } finally {
       setIsProcessing(false);
     }
