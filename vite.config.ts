@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   preview: {
-    host: "0.0.0.0",
+    host: "localhost",
     port: 3000,
     allowedHosts: [
       "thermalvisionai-1.onrender.com",

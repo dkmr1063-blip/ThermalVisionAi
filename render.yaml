@@ -1,24 +1,21 @@
 services:
-  - type: web
+  - type: static
     name: thermal-vision-frontend
-    runtime: node
-    buildCommand: npm install && npm run build
-    startCommand: npm run preview
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    routes:
+      - path: /*
+        destination: /index.html
     envVars:
       - key: NODE_ENV
         value: production
-      - key: VITE_API_URL
-        value: ${RENDER_EXTERNAL_URL}
-    routes:
-      - path: /api
-        destination: http://localhost:5000
 
   - type: web
     name: thermal-vision-backend
     runtime: python
     pythonVersion: 3.11
-    buildCommand: pip install -r requirements.txt
-    startCommand: python server.py
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && gunicorn --workers 1 --worker-class sync --bind 0.0.0.0:$PORT server:app
     envVars:
       - key: FLASK_ENV
         value: production
